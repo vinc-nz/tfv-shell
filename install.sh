@@ -43,9 +43,12 @@ set +e
 git clone https://github.com/vim-airline/vim-airline.git
 git clone https://github.com/vim-airline/vim-airline-themes
 git clone https://github.com/ctrlpvim/ctrlp.vim
-git clone https://github.com/vim-scripts/vim-auto-save.git
+git clone https://github.com/907th/vim-auto-save.git
 git clone https://github.com/vim-syntastic/syntastic.git
+git clone https://github.com/janko/vim-test
 git clone https://github.com/vimwiki/vimwiki.git
+git clone https://github.com/fatih/vim-go.git
+git clone https://github.com/SirVer/ultisnips.git
 git clone https://github.com/vim-python/python-syntax.git
 git clone --recursive https://github.com/davidhalter/jedi-vim.git
 mkdir -p black/plugin

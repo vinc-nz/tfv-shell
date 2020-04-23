@@ -45,13 +45,17 @@ Comes with plugins
 
 * [airline](https://github.com/vim-airline/vim-airline)
 * [ctrlp.vim](https://github.com/ctrlpvim/ctrlp.vim)
-* [autosave](https://github.com/vim-scripts/vim-auto-save)
+* [autosave](https://github.com/907th/vim-auto-save)
 * [syntastic](https://github.com/vim-syntastic/syntastic)
+* [vim-test](https://github.com/janko/vim-test)
 * [vimwiki](https://github.com/vimwiki/vimwiki)
+* [ultisnips](https://github.com/SirVer/ultisnips)
 * python development plugins
     - [python-syntax](https://github.com/vim-python/python-syntax)
     - [jedi-vim](https://github.com/davidhalter/jedi-vim)
     - [black](https://github.com/psf/black/blob/master/plugin/black.vim)
+* go development plugins
+    - [vim-go](https://github.com/fatih/vim-go)
 
 and moreover you can paste in insert mode without setting paste mode ;)
 
@@ -63,9 +67,7 @@ and moreover you can paste in insert mode without setting paste mode ;)
  
 `C-a n` new window
 
-`C-a w` close window
-
-`C-a a` choose window
+`C-a w` choose window
 
 `C-a 1..9` move to window
  
@@ -117,7 +119,7 @@ and moreover you can paste in insert mode without setting paste mode ;)
 
 ```l`` go to next buffer
 
-```w`` close buffer
+```x`` delete buffer
 
 see vimrc for more shortcuts
 

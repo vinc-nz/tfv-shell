@@ -97,6 +97,11 @@ set wrap "Wrap lines
 " set the prefix (=leader) for custom commands
 let mapleader = "`"
 
+"   move one paragraph up
+nnoremap <c-up> {
+"   move one paragraph down
+nnoremap <c-down> }
+
 "   copy to system clipboard
 noremap <Leader>y "+y
 noremap <Leader>d "+d
@@ -114,19 +119,39 @@ nnoremap <Leader>p :b#<cr>
 
 "   delete buffer
 nnoremap <Leader>x :bd<cr>
-nnoremap <Leader>w :bd<cr>
-
-"   move to next item in location list
-nnoremap <Leader>n :lnext<cr>
 
 "   turn off search highlight
 nnoremap <leader><space> :nohlsearch<CR>
 
+"   go back after a tag jump
+nmap <leader>[ <C-T>
+
+"   cycle throgh windows
+nnoremap <space> <C-W>w
+"   resize panel vertically to 80 chars
+nnoremap \| <C-W>80\|
+
+"   go to highlighted location in quickfix list
+nnoremap <Leader>n :cc<cr>
+"   go to highlighted location in location list
+nnoremap <Leader>m :ll<cr>
+"   close quickfix and location list
+nnoremap <Leader>c :lclose \| cclose<cr>
+
 "   search for visually selected text
 vnoremap * y/\V<C-R>=escape(@",'/\')<CR><CR>
+" hint: once the text is highlighted you can just replace it with
+"   %s//<your-replacement-string>
 
 "   exit insert mode
 inoremap <C-c> <Esc>
+
+"   auto close pairs
+inoremap " ""<left>
+inoremap ( ()<left>
+inoremap [ []<left>
+inoremap { {}<left>
+inoremap {<CR> {<CR>}<ESC>O
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Misc
@@ -154,7 +179,8 @@ augroup END
 let g:ctrlp_map = '<Leader>o'
 
 let g:auto_save = 1
-let g:auto_save_in_insert_mode = 0
+let g:auto_save_events = ["InsertLeave", "CursorHold"]
+let g:auto_save_silent = 1  " do not display the auto-save notification
 
 let g:airline_theme='deus'
 let g:airline_powerline_fonts=1
@@ -171,13 +197,18 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
+let g:syntastic_mode_map = {
+        \ "mode": "active",
+        \ "passive_filetypes": ["python", "go"] }
+
+let test#strategy = "make"
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Python plugins configuration
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let g:python_highlight_all = 1
 
-let g:jedi#goto_command = "<leader>b"
+let g:jedi#goto_command = "<leader>]"
 let g:jedi#goto_assignments_command = "<leader>g"
 let g:jedi#goto_stubs_command = "<leader>s"
 let g:jedi#goto_definitions_command = ""
@@ -186,6 +217,28 @@ let g:jedi#usages_command = "<leader>n"
 let g:jedi#completions_command = "<C-Space>"
 let g:jedi#rename_command = "<leader>r"
 
-autocmd FileType python let g:auto_save_postsave_hook = 'silent! SyntasticCheck'
-autocmd FileType python nmap <Leader>f :Black<cr>
+let g:vimpy_prompt_resolve = 1
 
+function! PythonBuild()
+    Black
+    write
+    SyntasticCheck
+endfunction
+autocmd FileType python let g:auto_save_postsave_hook = 'call PythonBuild()'
+autocmd FileType python nmap <Leader>1 :call PythonBuild()<cr>
+autocmd FileType python nmap <Leader>2 :TestFile<cr>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => go plugins configuration
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:go_list_type = "quickfix"
+let g:go_fmt_command = "goimports"
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_function_calls = 1
+autocmd FileType go nmap <leader>1  <Plug>(go-build)
+autocmd FileType go nmap <leader>2  <Plug>(go-test)
+autocmd FileType go nmap <leader>3  <Plug>(go-run)
+autocmd FileType go nmap <leader>r  <Plug>(go-rename)
+autocmd FileType go nmap <leader>]  <Plug>(go-def)

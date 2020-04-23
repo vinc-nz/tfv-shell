@@ -2,6 +2,9 @@
 set -g theme_nerd_fonts yes
 
 # env variables
+set -gx GOROOT $HOME/.local/go
+set -gx GOPATH $HOME/dev/go
+set -gx PATH $PATH $HOME/.local/bin $GOROOT/bin $GOPATH/bin
 set -gx PIPENV_VENV_IN_PROJECT true
 
 # aliases
