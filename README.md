@@ -13,7 +13,9 @@ Clone the repo and run
 
     ./install.sh
 
-If you have gnome-terminal installed this will setup a new terminal profile called `tfv-shell`. 
+For Mac users this requires iTerm2 and brew, for Linux users this requires `apt-get` and gnome-terminal
+
+the script will setup a new terminal profile called `tfv-shell`. 
 
 Run a new terminal with the tf-shell profile and you are ready to go.
 
@@ -27,6 +29,7 @@ Run a new terminal with the tf-shell profile and you are ready to go.
 
 ### fish shell
 
+* vi keys
 * includes [omf](https://github.com/oh-my-fish/oh-my-fish)
 * [bob-the-fish](https://github.com/oh-my-fish/theme-bobthefish) theme
 * automatically renames tmux windows based on currect directory
@@ -75,7 +78,7 @@ and moreover you can paste in insert mode without setting paste mode ;)
 
 `C-l` next-window
 
-`C-p` last used window
+`C-b` last used window
  
 `C-a v` split window vertically
 

@@ -5,7 +5,15 @@ config_d=$(realpath $(dirname $0))
 echo "config_d=$config_d"
 
 echo "Installing packages"
-sudo apt-get install -y fish vim tmux python3-venv xclip
+if which -s apt-get; then
+    sudo apt-get install -y fish vim tmux python3-venv xclip
+    sudo ln -s /usr/bin/tmux /usr/local/bin
+elif which -s brew; then
+    brew install macvim tmux wget 
+else
+    echo "no known package manager found. aborting"
+    exit 1
+fi
 
 if ! fish -c 'omf version'; then
     echo "Installing omf"
@@ -61,21 +69,39 @@ fi
 cd
 set -e
 
-echo "Installing font"
-mkdir -p ~/.local/share/fonts
-cd ~/.local/share/fonts
-url='https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/SourceCodePro/Regular/complete/Sauce%20Code%20Pro%20Nerd%20Font%20Complete%20Mono.ttf'
-wget -qN $url
-fc-cache -fv .
+if [ -d ~/.local ]; then
+    echo "Installing font"
+    mkdir -p ~/.local/share/fonts
+    cd ~/.local/share/fonts
+    url='https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/SourceCodePro/Regular/complete/Sauce%20Code%20Pro%20Nerd%20Font%20Complete%20Mono.ttf'
+    wget -qN $url
+    fc-cache -fv .
+elif which -s brew; then
+    brew cask install font-saucecodepro-nerd-font
+fi
 
-echo "Installing gnome-terminal profile"
-uuid=fc220540-a8df-4718-afb0-2c4111d2f7b8
-profile_key_path=/org/gnome/terminal/legacy/profiles:/:$uuid/
-profile_list_key=/org/gnome/terminal/legacy/profiles:/list
-dconf load $profile_key_path < "${config_d}/gnome-terminal-profile.dconf"
-profile_list=$(dconf read $profile_list_key)
-if [[ "$profile_list" != *"$uuid"* ]]; then
-    dconf write $profile_list_key "${profile_list/]/, \'$uuid\']}"
+if which dconf &> /dev/null; then
+    echo "Installing gnome-terminal profile"
+    uuid=fc220540-a8df-4718-afb0-2c4111d2f7b8
+    profile_key_path=/org/gnome/terminal/legacy/profiles:/:$uuid/
+    profile_list_key=/org/gnome/terminal/legacy/profiles:/list
+    dconf load $profile_key_path < "${config_d}/gnome-terminal-profile.dconf"
+    profile_list=$(dconf read $profile_list_key)
+    if [[ "$profile_list" != *"$uuid"* ]]; then
+        dconf write $profile_list_key "${profile_list/]/, \'$uuid\']}"
+    fi
+elif [ -d ~/Library/Application\ Support/iTerm2/ ]; then
+    echo "installing iTerm2 profile"
+    mkdir -p ~/Library/Application\ Support/iTerm2/DynamicProfiles
+    ln -s "${conf_d}/tfv-shell-iterm2-profile-osx.json" ~/Library/Application\ Support/iTerm2/DynamicProfiles
+else
+    echo "no known terminal app found"
+    echo "to start set a new terminal with powerline nerd fonts and run"
+    echo
+    echo "  /usr/local/bin/tmux"
+    echo
+    echo "for fonts see https://github.com/ryanoasis/nerd-fonts"
+    exit 0
 fi
 
 echo "=================="
