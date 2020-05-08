@@ -43,6 +43,11 @@ mkdir -p "$HOME/.config/fish"
 create_symlink "${config_d}/config.fish" "$HOME/.config/fish/config.fish"
 create_symlink "${config_d}/tmux.conf" "$HOME/.tmux.conf"
 create_symlink "${config_d}/vimrc" "$HOME/.vimrc"
+create_symlink "${config_d}/ftplugin" "$HOME/.vim/ftplugin"
+
+echo "Installing fzf"
+git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+~/.fzf/install --all
 
 echo "Installing vim plugins"
 mkdir -p ~/.vim/pack/tfv-shell/start
@@ -50,37 +55,29 @@ cd ~/.vim/pack/tfv-shell/start
 set +e
 git clone https://github.com/vim-airline/vim-airline.git
 git clone https://github.com/vim-airline/vim-airline-themes
-git clone https://github.com/ctrlpvim/ctrlp.vim
+git clone https://github.com/junegunn/fzf.vim.git
+git clone https://github.com/dense-analysis/ale.git
 git clone https://github.com/907th/vim-auto-save.git
-git clone https://github.com/vim-syntastic/syntastic.git
 git clone https://github.com/janko/vim-test
 git clone https://github.com/vimwiki/vimwiki.git
 git clone https://github.com/fatih/vim-go.git
 git clone https://github.com/SirVer/ultisnips.git
 git clone https://github.com/vim-python/python-syntax.git
-git clone --recursive https://github.com/davidhalter/jedi-vim.git
-mkdir -p black/plugin
-cd black/plugin
-wget -qN https://raw.githubusercontent.com/psf/black/19.10b0/plugin/black.vim
-if ! vim -E -c BlackVersion -c q; then
-    echo "WARNING: black does not seem to work, removing the plugin"
-    rm *
-fi    
 cd
 set -e
 
-if [ -d ~/.local ]; then
+if which -s brew; then
+    brew cask install font-saucecodepro-nerd-font
+elif [ -d ~/.local ]; then
     echo "Installing font"
     mkdir -p ~/.local/share/fonts
     cd ~/.local/share/fonts
     url='https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/SourceCodePro/Regular/complete/Sauce%20Code%20Pro%20Nerd%20Font%20Complete%20Mono.ttf'
     wget -qN $url
     fc-cache -fv .
-elif which -s brew; then
-    brew cask install font-saucecodepro-nerd-font
 fi
 
-if which dconf &> /dev/null; then
+if which -s dconf; then
     echo "Installing gnome-terminal profile"
     uuid=fc220540-a8df-4718-afb0-2c4111d2f7b8
     profile_key_path=/org/gnome/terminal/legacy/profiles:/:$uuid/
@@ -93,7 +90,7 @@ if which dconf &> /dev/null; then
 elif [ -d ~/Library/Application\ Support/iTerm2/ ]; then
     echo "installing iTerm2 profile"
     mkdir -p ~/Library/Application\ Support/iTerm2/DynamicProfiles
-    ln -s "${conf_d}/tfv-shell-iterm2-profile-osx.json" ~/Library/Application\ Support/iTerm2/DynamicProfiles
+    ln -s "${config_d}/tfv-shell-iterm2-profile-osx.json" ~/Library/Application\ Support/iTerm2/DynamicProfiles
 else
     echo "no known terminal app found"
     echo "to start set a new terminal with powerline nerd fonts and run"

@@ -27,7 +27,6 @@ set nocompatible
 " do not write backup files
 set nobackup
 
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -75,6 +74,11 @@ set tw=500
 set ai "Auto indent
 set si "Smart indent
 set wrap "Wrap lines
+
+set colorcolumn=80 " absolute columns to highlight
+
+" so that backspace behaves like you would expect to
+set backspace=indent,eol,start
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General Keybindings
@@ -146,37 +150,12 @@ vnoremap * y/\V<C-R>=escape(@",'/\')<CR><CR>
 "   exit insert mode
 inoremap <C-c> <Esc>
 
-"   auto close pairs
-inoremap " ""<left>
-inoremap ( ()<left>
-inoremap [ []<left>
-inoremap { {}<left>
-inoremap {<CR> {<CR>}<ESC>O
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Misc
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" Use two spaces instead of 4 for yaml
-autocmd FileType yaml setlocal ts=2 sts=2 sw=2
-
-" automatically open quickfix window when using :vimgrep
-"  :cn go to next occurrence
-"  :cdo run command for each occurrence
-"  :cclose close quickfix window
-"  for more info :help quickfix 
-augroup qf
-    autocmd!
-    autocmd QuickFixCmdPost [^l]* cwindow
-    autocmd QuickFixCmdPost l*    cwindow
-    autocmd VimEnter        *     cwindow
-augroup END
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General plugins configuration
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-let g:ctrlp_map = '<Leader>o'
+set rtp+=~/.fzf
+nmap <Leader>o :Files<cr>
+nmap <Leader>b :Buffers<cr>
 
 let g:auto_save = 1
 let g:auto_save_events = ["InsertLeave", "CursorHold"]
@@ -184,61 +163,24 @@ let g:auto_save_silent = 1  " do not display the auto-save notification
 
 let g:airline_theme='deus'
 let g:airline_powerline_fonts=1
-let g:airline_section_warning = '%{SyntasticStatuslineFlag()}'
 let g:airline_section_c = '%{getcwd()}'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
+
+let g:ale_fixers = {'python': ['black']}
+let g:ale_completion_enabled = 1
+let b:ale_linters = {'python': ['flake8']}
+let g:ale_set_loclist = 0
+let g:ale_set_quickfix = 1
+let g:airline#extensions#ale#enabled = 1
+nmap <Leader>f :ALEFix<cr>
+nmap <Leader>r :ALERename<cr>
+nmap <Leader>] :ALEGoToDefinition<cr>
+nmap <Leader>? :ALEHover<cr>
+nmap <Leader>* :ALEFindReferences<cr>
 
 let g:vimwiki_list = [{'path': '~/Dropbox/wiki/', 'syntax': 'markdown', 'ext': '.txt'}]
 nmap <Leader>i <Plug>VimwikiIndex
 nmap <Leader>t <Plug>VimwikiMakeDiaryNote
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
-let g:syntastic_mode_map = {
-        \ "mode": "active",
-        \ "passive_filetypes": ["python", "go"] }
-
 let test#strategy = "make"
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Python plugins configuration
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:python_highlight_all = 1
-
-let g:jedi#goto_command = "<leader>]"
-let g:jedi#goto_assignments_command = "<leader>g"
-let g:jedi#goto_stubs_command = "<leader>s"
-let g:jedi#goto_definitions_command = ""
-let g:jedi#documentation_command = "K"
-let g:jedi#usages_command = "<leader>n"
-let g:jedi#completions_command = "<C-Space>"
-let g:jedi#rename_command = "<leader>r"
-
-let g:vimpy_prompt_resolve = 1
-
-function! PythonBuild()
-    Black
-    write
-    SyntasticCheck
-endfunction
-autocmd FileType python let g:auto_save_postsave_hook = 'call PythonBuild()'
-autocmd FileType python nmap <Leader>1 :call PythonBuild()<cr>
-autocmd FileType python nmap <Leader>2 :TestFile<cr>
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => go plugins configuration
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:go_list_type = "quickfix"
-let g:go_fmt_command = "goimports"
-let g:go_highlight_types = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_functions = 1
-let g:go_highlight_function_calls = 1
-autocmd FileType go nmap <leader>1  <Plug>(go-build)
-autocmd FileType go nmap <leader>2  <Plug>(go-test)
-autocmd FileType go nmap <leader>3  <Plug>(go-run)
-autocmd FileType go nmap <leader>r  <Plug>(go-rename)
-autocmd FileType go nmap <leader>]  <Plug>(go-def)
