@@ -75,7 +75,13 @@ set ai "Auto indent
 set si "Smart indent
 set wrap "Wrap lines
 
-set colorcolumn=80 " absolute columns to highlight
+hi CursorLine cterm=NONE ctermbg=235
+set cursorline
+augroup cursor_hi
+    autocmd!
+    autocmd WinLeave * set nocursorline 
+    autocmd WinEnter * set cursorline 
+augroup END
 
 " so that backspace behaves like you would expect to
 set backspace=indent,eol,start
@@ -130,15 +136,14 @@ nnoremap <leader><space> :nohlsearch<CR>
 "   go back after a tag jump
 nmap <leader>[ <C-T>
 
-"   cycle throgh windows
-nnoremap <space> <C-W>w
+"   move to last used window
+"   this is actually <C-Space>
+nnoremap <C-@> <C-W>p
 "   resize panel vertically to 80 chars
 nnoremap \| <C-W>80\|
 
 "   go to highlighted location in quickfix list
 nnoremap <Leader>n :cc<cr>
-"   go to highlighted location in location list
-nnoremap <Leader>m :ll<cr>
 "   close quickfix and location list
 nnoremap <Leader>c :lclose \| cclose<cr>
 
