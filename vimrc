@@ -136,9 +136,6 @@ nnoremap <leader><space> :nohlsearch<CR>
 "   go back after a tag jump
 nmap <leader>[ <C-T>
 
-"   move to last used window
-"   this is actually <C-Space>
-nnoremap <C-@> <C-W>p
 "   resize panel vertically to 80 chars
 nnoremap \| <C-W>80\|
 
