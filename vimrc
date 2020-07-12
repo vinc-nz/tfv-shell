@@ -159,7 +159,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug '907th/vim-auto-save'
-Plug 'junegunn/fzf.vim'
+Plug 'junegunn/fzf.vim', { 'do': { -> fzf#install() } }
 Plug 'vimwiki/vimwiki'
 Plug 'SirVer/ultisnips'
 Plug 'mhinz/vim-startify'

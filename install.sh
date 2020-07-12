@@ -47,12 +47,6 @@ create_symlink "${config_d}/tmux.conf" "$HOME/.tmux.conf"
 create_symlink "${config_d}/vimrc" "$HOME/.vimrc"
 create_symlink "${config_d}/ftplugin" "$HOME/.vim/ftplugin"
 
-if [ ! -d ~/.fzf ]; then
-    echo "Installing fzf"
-    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-    ~/.fzf/install --all
-fi
-
 
 echo "Installing vim plugins"
 pip3 install --user --upgrade pynvim
