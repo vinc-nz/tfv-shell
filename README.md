@@ -47,6 +47,7 @@ Run a new terminal with the tf-shell profile and you are ready to go.
 
 Comes with plugins
 
+* [deoplete](https://github.com/Shougo/deoplete.nvim/)
 * [airline](https://github.com/vim-airline/vim-airline)
 * [autosave](https://github.com/907th/vim-auto-save)
 * [ale](https://github.com/dense-analysis/ale)

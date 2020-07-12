@@ -10,3 +10,4 @@ nmap <leader>3  <Plug>(go-run)
 nmap <leader>r  <Plug>(go-rename)
 nmap <leader>]  <Plug>(go-def)
 inoremap {<CR> {<CR>}<ESC>O
+call deoplete#custom#option('omni_patterns', { 'go': '[^. *\t]\.\w*' })

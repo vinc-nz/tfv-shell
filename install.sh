@@ -8,11 +8,13 @@ echo "Installing packages"
 if which -s apt-get; then
     sudo apt-get install -y fish vim tmux python3-venv xclip
     sudo ln -s /usr/bin/tmux /usr/local/bin
+    sudo ln -s /usr/bin/fish /usr/local/bin
 elif which -s brew; then
     brew install macvim tmux wget 
 else
-    echo "no known package manager found. aborting"
-    exit 1
+    echo "no known package manager found"
+    echo "make sure vim,fish and tmux are installed and press a key to continue"
+    read
 fi
 
 if ! fish -c 'omf version'; then
@@ -45,26 +47,18 @@ create_symlink "${config_d}/tmux.conf" "$HOME/.tmux.conf"
 create_symlink "${config_d}/vimrc" "$HOME/.vimrc"
 create_symlink "${config_d}/ftplugin" "$HOME/.vim/ftplugin"
 
-echo "Installing fzf"
-git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-~/.fzf/install --all
+if [ ! -d ~/.fzf ]; then
+    echo "Installing fzf"
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+    ~/.fzf/install --all
+fi
+
 
 echo "Installing vim plugins"
-mkdir -p ~/.vim/pack/tfv-shell/start
-cd ~/.vim/pack/tfv-shell/start
-set +e
-git clone https://github.com/vim-airline/vim-airline.git
-git clone https://github.com/vim-airline/vim-airline-themes
-git clone https://github.com/junegunn/fzf.vim.git
-git clone https://github.com/dense-analysis/ale.git
-git clone https://github.com/907th/vim-auto-save.git
-git clone https://github.com/janko/vim-test
-git clone https://github.com/vimwiki/vimwiki.git
-git clone https://github.com/fatih/vim-go.git
-git clone https://github.com/SirVer/ultisnips.git
-git clone https://github.com/vim-python/python-syntax.git
-cd
-set -e
+pip3 install --user --upgrade pynvim
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+vim -c 'PlugInstall' -c qa
 
 if which -s brew; then
     brew cask install font-saucecodepro-nerd-font

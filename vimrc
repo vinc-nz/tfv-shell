@@ -153,11 +153,39 @@ vnoremap * y/\V<C-R>=escape(@",'/\')<CR><CR>
 inoremap <C-c> <Esc>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Plugins
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+call plug#begin('~/.vim/plugged')
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug '907th/vim-auto-save'
+Plug 'junegunn/fzf.vim'
+Plug 'vimwiki/vimwiki'
+Plug 'SirVer/ultisnips'
+Plug 'mhinz/vim-startify'
+Plug 'greymd/oscyank.vim'
+Plug 'dense-analysis/ale', { 'for': ['python', 'sh'] }
+Plug 'vim-python/python-syntax', { 'for': 'python' }
+Plug 'janko/vim-test', { 'for': 'python' }
+Plug 'fatih/vim-go', { 'for': 'go', 'do': ':GoInstallBinaries' }
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
+call plug#end()
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General plugins configuration
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set rtp+=~/.fzf
 nmap <Leader>o :Files<cr>
 nmap <Leader>b :Buffers<cr>
+
+map <leader>" :OscyankRegister<cr>
 
 let g:auto_save = 1
 let g:auto_save_events = ["InsertLeave", "CursorHold"]
@@ -169,20 +197,11 @@ let g:airline_section_c = '%{getcwd()}'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
 
-let g:ale_fixers = {'python': ['black']}
-let g:ale_completion_enabled = 1
-let b:ale_linters = {'python': ['flake8']}
-let g:ale_set_loclist = 0
-let g:ale_set_quickfix = 1
-let g:airline#extensions#ale#enabled = 1
-nmap <Leader>f :ALEFix<cr>
-nmap <Leader>r :ALERename<cr>
-nmap <Leader>] :ALEGoToDefinition<cr>
-nmap <Leader>? :ALEHover<cr>
-nmap <Leader>* :ALEFindReferences<cr>
-
 let g:vimwiki_list = [{'path': '~/Dropbox/wiki/', 'syntax': 'markdown', 'ext': '.txt'}]
 nmap <Leader>i <Plug>VimwikiIndex
 nmap <Leader>t <Plug>VimwikiMakeDiaryNote
 
 let test#strategy = "make"
+
+let g:deoplete#enable_at_startup = 1
+autocmd CompleteDone * silent! pclose
