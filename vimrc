@@ -159,12 +159,14 @@ call plug#begin('~/.vim/plugged')
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug '907th/vim-auto-save'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'vimwiki/vimwiki'
 Plug 'SirVer/ultisnips'
 Plug 'mhinz/vim-startify'
 Plug 'greymd/oscyank.vim'
-Plug 'dense-analysis/ale', { 'for': ['python', 'sh'] }
+Plug 'dense-analysis/ale'
+Plug 'solarnz/thrift.vim', { 'for': 'thrift' }
 Plug 'vim-python/python-syntax', { 'for': 'python' }
 Plug 'janko/vim-test', { 'for': 'python' }
 Plug 'fatih/vim-go', { 'for': 'go', 'do': ':GoInstallBinaries' }
@@ -181,7 +183,6 @@ call plug#end()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General plugins configuration
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set rtp+=~/.fzf
 nmap <Leader>o :Files<cr>
 nmap <Leader>b :Buffers<cr>
 
@@ -205,3 +206,12 @@ let test#strategy = "make"
 
 let g:deoplete#enable_at_startup = 1
 autocmd CompleteDone * silent! pclose
+
+let g:ale_set_loclist = 0
+let g:ale_set_quickfix = 1
+let g:airline#extensions#ale#enabled = 1
+nmap <Leader>f :ALEFix<cr>
+nmap <Leader>r :ALERename<cr>
+nmap <Leader>? :ALEHover<cr>
+nmap <Leader>* :ALEFindReferences<cr>
+nmap <C-]> :ALEGoToDefinition<cr>
