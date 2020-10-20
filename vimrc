@@ -53,6 +53,8 @@ set incsearch
 " visual autocomplete for command menu
 set wildmenu            
 
+" Faster updates on CursorHold/CursorHoldI
+set updatetime=1000
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Text, tab and indent related
@@ -107,23 +109,6 @@ set backspace=indent,eol,start
 " set the prefix (=leader) for custom commands
 let mapleader = "`"
 
-"   move one paragraph up
-nnoremap <c-up> {
-"   move one paragraph down
-nnoremap <c-down> }
-
-"   copy to system clipboard
-noremap <Leader>y "+y
-noremap <Leader>d "+d
-"   copy all to system keyboard
-noremap <Leader>a gg"+yG
-
-"   move to next buffer
-nnoremap <Leader>l :bn<cr>
-
-"   move to previous buffer
-nnoremap <Leader>h :bp<cr>
-
 "   move to last used buffer
 nnoremap <Leader>p :b#<cr>
 
@@ -133,21 +118,16 @@ nnoremap <Leader>x :bd<cr>
 "   turn off search highlight
 nnoremap <leader><space> :nohlsearch<CR>
 
-"   go back after a tag jump
-nmap <leader>[ <C-T>
-
 "   resize panel vertically to 80 chars
 nnoremap \| <C-W>80\|
-
-"   go to highlighted location in quickfix list
-nnoremap <Leader>n :cc<cr>
-"   close quickfix and location list
-nnoremap <Leader>c :lclose \| cclose<cr>
 
 "   search for visually selected text
 vnoremap * y/\V<C-R>=escape(@",'/\')<CR><CR>
 " hint: once the text is highlighted you can just replace it with
 "   %s//<your-replacement-string>
+
+" Make * stay at the cursor position
+nnoremap * m`:keepjumps normal! *``<cr>
 
 "   exit insert mode
 inoremap <C-c> <Esc>
@@ -166,6 +146,7 @@ Plug 'SirVer/ultisnips'
 Plug 'mhinz/vim-startify'
 Plug 'greymd/oscyank.vim'
 Plug 'dense-analysis/ale'
+Plug 'mhinz/vim-signify'
 Plug 'solarnz/thrift.vim', { 'for': 'thrift' }
 Plug 'vim-python/python-syntax', { 'for': 'python' }
 Plug 'janko/vim-test', { 'for': 'python' }
@@ -210,8 +191,15 @@ autocmd CompleteDone * silent! pclose
 let g:ale_set_loclist = 0
 let g:ale_set_quickfix = 1
 let g:airline#extensions#ale#enabled = 1
-nmap <Leader>f :ALEFix<cr>
-nmap <Leader>r :ALERename<cr>
-nmap <Leader>? :ALEHover<cr>
-nmap <Leader>* :ALEFindReferences<cr>
-nmap <C-]> :ALEGoToDefinition<cr>
+nmap <Leader>f <Plug>(ale_fix)
+nmap <Leader>? <Plug>(ale_hover)
+nmap <Leader>* <Plug>(ale_find_references)
+nmap <C-]> <Plug>(ale_go_to_definition)
+nmap [e <Plug>(ale_previous_wrap_error)
+nmap ]e <Plug>(ale_next_wrap_error)
+
+nnoremap <leader>d :SignifyDiff<cr>
+nnoremap <leader>hd :SignifyHunkDiff<cr>
+nnoremap <leader>hu :SignifyHunkUndo<cr>
+nmap ]h <plug>(signify-next-hunk)
+nmap [h <plug>(signify-prev-hunk)
