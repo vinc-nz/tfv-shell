@@ -56,6 +56,13 @@ set wildmenu
 " Faster updates on CursorHold/CursorHoldI
 set updatetime=1000
 
+" auto-open quickfix
+augroup quickfix
+    autocmd!
+    autocmd QuickFixCmdPost [^l]* cwindow
+    autocmd QuickFixCmdPost l*    lwindow
+augroup END
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Text, tab and indent related
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -122,15 +129,19 @@ nnoremap <leader><space> :nohlsearch<CR>
 nnoremap \| <C-W>80\|
 
 "   search for visually selected text
-vnoremap * y/\V<C-R>=escape(@",'/\')<CR><CR>
+vnoremap <space> y/\V<C-R>=escape(@",'/\')<CR><CR>
 " hint: once the text is highlighted you can just replace it with
 "   %s//<your-replacement-string>
 
-" Make * stay at the cursor position
-nnoremap * m`:keepjumps normal! *``<cr>
+" Use word under cursor as search pattern
+nnoremap <space> m`:keepjumps normal! *``<cr>
 
 "   exit insert mode
 inoremap <C-c> <Esc>
+
+" quickfix navigation
+nnoremap <Leader>] cnext
+nnoremap <Leader>[ cprevious
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Plugins
@@ -151,6 +162,7 @@ Plug 'solarnz/thrift.vim', { 'for': 'thrift' }
 Plug 'vim-python/python-syntax', { 'for': 'python' }
 Plug 'janko/vim-test', { 'for': 'python' }
 Plug 'fatih/vim-go', { 'for': 'go', 'do': ':GoInstallBinaries' }
+Plug 'wincent/vim-clipper'
 if has('nvim')
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 else
@@ -167,7 +179,7 @@ call plug#end()
 nmap <Leader>o :Files<cr>
 nmap <Leader>b :Buffers<cr>
 
-map <leader>" :OscyankRegister<cr>
+nmap <leader>y <Plug>(ClipperClip)
 
 let g:auto_save = 1
 let g:auto_save_events = ["InsertLeave", "CursorHold"]
@@ -188,8 +200,8 @@ let test#strategy = "make"
 let g:deoplete#enable_at_startup = 1
 autocmd CompleteDone * silent! pclose
 
-let g:ale_set_loclist = 0
-let g:ale_set_quickfix = 1
+let g:ale_set_loclist = 1
+let g:ale_set_quickfix = 0
 let g:airline#extensions#ale#enabled = 1
 nmap <Leader>f <Plug>(ale_fix)
 nmap <Leader>? <Plug>(ale_hover)
