@@ -116,9 +116,6 @@ set backspace=indent,eol,start
 " set the prefix (=leader) for custom commands
 let mapleader = "`"
 
-"   move to last used buffer
-nnoremap <Leader>p :b#<cr>
-
 "   delete buffer
 nnoremap <Leader>x :bd<cr>
 
@@ -136,12 +133,16 @@ vnoremap <space> y/\V<C-R>=escape(@",'/\')<CR><CR>
 " Use word under cursor as search pattern
 nnoremap <space> m`:keepjumps normal! *``<cr>
 
+" navigate through search results without affecting jumplist
+cnoremap <C-n> <cr>
+nnoremap <C-n> :keepjumps normal n<cr>
+
 "   exit insert mode
 inoremap <C-c> <Esc>
 
 " quickfix navigation
-nnoremap <Leader>] cnext
-nnoremap <Leader>[ cprevious
+nnoremap ]c :cnext<CR>
+nnoremap [c :cprevious<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Plugins
@@ -165,10 +166,6 @@ Plug 'fatih/vim-go', { 'for': 'go', 'do': ':GoInstallBinaries' }
 Plug 'wincent/vim-clipper'
 if has('nvim')
   Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
 endif
 call plug#end()
 
@@ -176,8 +173,11 @@ call plug#end()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General plugins configuration
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nmap <Leader>p :Commands<cr>
 nmap <Leader>o :Files<cr>
-nmap <Leader>b :Buffers<cr>
+nmap <Leader>l :Lines<cr>
+nmap <Leader>m :Marks<cr>
+nmap <C-k> :Buffers<cr>
 
 nmap <leader>y <Plug>(ClipperClip)
 
@@ -202,6 +202,7 @@ autocmd CompleteDone * silent! pclose
 
 let g:ale_set_loclist = 1
 let g:ale_set_quickfix = 0
+let g:ale_linters_explicit = 1
 let g:airline#extensions#ale#enabled = 1
 nmap <Leader>f <Plug>(ale_fix)
 nmap <Leader>? <Plug>(ale_hover)
